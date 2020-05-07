@@ -1,3 +1,18 @@
+class Person
+  def initialize(name)
+    @name = name
+  end
+
+  # lots of boilerplate code. can we do better?
+  def name
+    @name
+  end
+
+  def name=(new_name)
+    @name = new_name
+  end
+end
+
 class Student
   attr_reader :name
   attr_writer :name

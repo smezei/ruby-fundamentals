@@ -36,41 +36,35 @@ class Account
       puts 'No overdraft possible!!!'
       transaction = Transaction.new(:overdraft_attempt, amount)
       @transactions.push transaction
-      return
+    else
+      @balance -= amount
+      transaction = Transaction.new(:withdrawal, amount)
+      @transactions.push transaction
+      puts "Successfully withdrawn amount of #{amount}..."
     end
-
-    @balance -= amount
-    transaction = Transaction.new(:withdrawal, amount)
-    @transactions.push transaction
-    puts "Successfully withdrawn amount of #{amount}..."
   end
 
   def transactions
     puts 'Here are your transactions:'
-    @transactions.each_with_index do |transaction, index|
-      print "##{index + 1} - "
-      case transaction.type
-      when :account_opening
-        puts "Account opened with initial balance of #{transaction.amount}"
-      when :deposit
-        puts "Account deposited with amount of #{transaction.amount}"
-      when :withdrawal
-        puts "Account withdrawn with amount of #{transaction.amount}"
-      when :overdraft_attempt
-        puts "Account overdraft attempted with amount of #{transaction.amount}"
-      else
-        puts 'Unknown transaction type!'
-      end
-    end
+    @transactions.each_with_index { |transaction, index| puts "##{index + 1} - #{transaction}" }
   end
 end
 
 class Transaction
-  attr_reader :type, :amount
-
   def initialize(type, amount)
     @type = type
     @amount = amount
+  end
+
+  def to_s
+    case @type
+    when :account_opening then "Account opened with initial balance of #{@amount}"
+    when :deposit then "Account deposited with amount of #{@amount}"
+    when :withdrawal then "Account withdrawn with amount of #{@amount}"
+    when :overdraft_attempt then "Account overdraft attempted with amount of #{@amount}"
+    else
+      'Unknown transaction type!'
+    end
   end
 end
 
